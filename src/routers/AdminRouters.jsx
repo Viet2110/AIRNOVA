@@ -1,6 +1,4 @@
 import React from 'react';
-import Dashboard from '../pages/admin/dasboard/Dashboard';
-import Categories from '../pages/admin/categories/Categories';
 import Aircrafts from '../pages/admin/plane/aircrafts/Aircrafts';
 import Airports from '../pages/admin/plane/airports/Airports';
 import Airlines from '../pages/admin/plane/airlines/Airlines';
@@ -15,14 +13,7 @@ import SeatTypes from '../pages/admin/seat/SeatTypes/SeatTypes';
 
 function AdminRouters(props) {
     const routers = [
-        {
-            path: "/",
-            element: <Dashboard />
-        },
-        {
-            path: "/categories",
-            element: <Categories />
-        },
+        
         {
             path: "/aircrafts",
             element: <Aircrafts />

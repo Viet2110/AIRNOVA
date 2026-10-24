@@ -1,6 +1,6 @@
 import { styled } from '@mui/material/styles';
 import { TableCell, tableCellClasses, TableRow } from "@mui/material";
-
+// style admin
 export const dialogStyle = {
     "& .MuiPaper-root": {
         background: "rgba(20,20,20,0.95)",
@@ -42,31 +42,34 @@ export const textFieldStyle = {
             borderWidth: "2px",
         },
     },
+    "& input::-webkit-calendar-picker-indicator": {
+        filter: "invert(1)",
+    },
 };
 
 export const tableContainerStyle = {
-  mt: 2,
-  backgroundColor: "transparent",
-  backgroundImage: "none", // Xóa nền mặc định của Paper
-  boxShadow: "0 0 25px rgba(2, 248, 92, 0.4)",
-  border: "1px solid rgba(0, 255, 255, 0.3)",
-  borderRadius: "12px",
-  overflow: "hidden",
-  
+    mt: 2,
+    backgroundColor: "transparent",
+    backgroundImage: "none", // Xóa nền mặc định của Paper
+    boxShadow: "0 0 25px rgba(2, 248, 92, 0.4)",
+    border: "1px solid rgba(0, 255, 255, 0.3)",
+    borderRadius: "12px",
+    overflow: "hidden",
+
 };
 
 export const tableStyle = {
-  backgroundColor: "transparent",
+    backgroundColor: "transparent",
 
-  "& .MuiTableCell-root": {
-    color: "#fff",
-    borderColor: "rgba(255,255,255,0.1)",
-  },
-  
-  "& .MuiTableCell-head": {
-    color: "#fff",
-    fontWeight: 700,
-  },
+    "& .MuiTableCell-root": {
+        color: "#fff",
+        borderColor: "rgba(255,255,255,0.1)",
+    },
+
+    "& .MuiTableCell-head": {
+        color: "#fff",
+        fontWeight: 700,
+    },
 };
 
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -88,3 +91,15 @@ export const StyledTableRow = styled(TableRow)(({ theme }) => ({
         border: 0,
     },
 }));
+//style home
+
+export const dialogStylehome = {
+    "& .MuiPaper-root": {
+        background: "rgba(235, 248, 250, 0.88)",
+        border: "1px solid rgba(255, 255, 255, 0.75)",
+        boxShadow: "0 12px 40px rgba(20, 70, 80, 0.3)",
+        backdropFilter: "blur(16px)",
+        color: "#183B45",
+        borderRadius: "18px",
+    },
+};

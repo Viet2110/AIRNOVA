@@ -49,8 +49,8 @@ export default function Dialog_Flights({ open, handleClose, flight, error, handl
                     <FormControl sx={{ mt: 2 }}>
                         <h1>Round Trip</h1>
                         <RadioGroup onChange={handleClickInput} value={flight.is_round_trip} row name="is_round_trip">
-                            <FormControlLabel value={true} control={<Radio sx={{ color: 'white' }} />} label="True" />
-                            <FormControlLabel value={false} control={<Radio sx={{ color: 'white' }} />} label="False" />
+                            <FormControlLabel value={true} control={<Radio sx={{ color: 'white' }} />} label="true" />
+                            <FormControlLabel value={false} control={<Radio sx={{ color: 'white' }} />} label="false" />
                         </RadioGroup>
                     </FormControl>
                 </DialogContent>

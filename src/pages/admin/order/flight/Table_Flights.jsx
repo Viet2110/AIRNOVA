@@ -10,11 +10,14 @@ import { deleteDocument } from '../../../../services/firebasesService';
 import ModelDelete from '../../../../components/common/admin/ModelDelete';
 import PaginationPage from '../../../../components/common/admin/PaginationPage';
 import { FlightContext } from '../../../../contexts/FlightProvider';
+import { AircraftContext } from '../../../../contexts/AircraftProvider';
 
 export default function TableFlights({ handleEdit, search }) {
     const flights = useContext(FlightContext);
     const airlines = useContext(AirlineContext);
     const airport = useContext(AirportContext);
+    const aircrafts = useContext(AircraftContext);
+
     const [open, setOpen] = useState(false);
     const [idDelete, setidDelete] = useState(null);
     const [page, setPage] = useState(0);
@@ -24,6 +27,8 @@ export default function TableFlights({ handleEdit, search }) {
     const handleClickOpen = (id) => {
         setOpen(true);
         setidDelete(id);
+        console.log(set);
+        
     };
 
     const handleClose = () => {
@@ -31,7 +36,7 @@ export default function TableFlights({ handleEdit, search }) {
     };
 
     const handleDelete = () => {
-        deleteDocument("flights", idDelete);
+        deleteDocument("Flights", idDelete);
         handleClose();
     }
 
@@ -58,10 +63,13 @@ export default function TableFlights({ handleEdit, search }) {
                     <TableRow>
                         <StyledTableCell align='center'>ID</StyledTableCell>
                         <StyledTableCell align='center'>AIRLINE</StyledTableCell>
+                        <StyledTableCell align='center'>AIRCRAFT</StyledTableCell>
                         <StyledTableCell align='center'>FROM_AIRPORT</StyledTableCell>
                         <StyledTableCell align='center'>TO_AIRPORT</StyledTableCell>
+                        <StyledTableCell align='center'>DEPARTURE_TIME</StyledTableCell>
+                        <StyledTableCell align='center'>ARRIVAL_TIME</StyledTableCell>
                         <StyledTableCell align='center'>DISCOUNT</StyledTableCell>
-                        <StyledTableCell align='center'>CREATED</StyledTableCell>
+                        <StyledTableCell align='center'>ROUND_TRIP</StyledTableCell>
                         <StyledTableCell align='center'>ACTION</StyledTableCell>
                     </TableRow>
                 </TableHead>
@@ -72,17 +80,22 @@ export default function TableFlights({ handleEdit, search }) {
                                 {page * rowsPerPage + index + 1}
                             </StyledTableCell>
                             <StyledTableCell align="center">{getObjectById(airlines, row.airline_id).name}</StyledTableCell>
+                            <StyledTableCell align="center">{getObjectById(aircrafts, row.aircraft_id).name}</StyledTableCell>
                             <StyledTableCell align="center">{getObjectById(airport, row.from_airport).name}</StyledTableCell>
                             <StyledTableCell align="center">{getObjectById(airport, row.to_airport).name}</StyledTableCell>
+                            <StyledTableCell align="center">{row.departure_time}</StyledTableCell>
+                            <StyledTableCell align="center">{row.arrival_time}</StyledTableCell>
                             <StyledTableCell align="center">{row.discount}</StyledTableCell>
-                            <StyledTableCell align='center' >{formatFirebaseTimestamp(row.created_at)}</StyledTableCell>
+                            <StyledTableCell align='center' >{row.is_round_trip ? "Yes" : "No" }</StyledTableCell>
                             <StyledTableCell align='center' >
-                                <Button onClick={() => handleEdit(row)} variant="contained" sx={{ mr: 2 }}>
-                                    <CiEdit />
-                                </Button>
-                                <Button onClick={() => handleClickOpen(row.id)} variant="contained" color='error' >
-                                    <MdDelete />
-                                </Button>
+                                <div className='flex gap-2'>
+                                    <Button onClick={() => handleEdit(row)} variant="contained" >
+                                        <CiEdit />
+                                    </Button>
+                                    <Button onClick={() => handleClickOpen(row.id)} variant="contained" color='error' >
+                                        <MdDelete />
+                                    </Button>
+                                </div>
                             </StyledTableCell>
                         </StyledTableRow>
                     ))}

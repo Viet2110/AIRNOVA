@@ -20,7 +20,8 @@ function Flights(props) {
         setOpen(false);
     };
     const handleClickInput = (e) => {
-        setFlights({ ...flight, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setFlights({ ...flight, [name]: name === "is_round_trip" ? value === "true" : value});
     }
     const validation = () => {
         const newError = {};
@@ -41,7 +42,8 @@ function Flights(props) {
         if (flight.id) {
             await updateDocument("Flights", flight);
         } else {
-
+          
+           
             await addDocument("Flights", flight);
         }
         handleClose();
@@ -50,7 +52,6 @@ function Flights(props) {
         handleClickOpen()
         setFlights(row);
     }
-
     const handleSearch = (i) => {
         setSearch(i.target.value)
     }
