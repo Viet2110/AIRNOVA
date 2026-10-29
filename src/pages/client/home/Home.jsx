@@ -77,7 +77,7 @@ function Home(props) {
                     </span>
                 </div>
             </div>
-            <div class="mx-5 my-5 grid grid-cols-[1fr_2fr] ">
+            <div className="mx-5 my-5 grid grid-cols-[1fr_2fr] ">
                 {/* trên */}
                 <div className='col-span-1'>
                     <div className='bg-[#2c5f6d] text-white text-2xl font-semibold py-5 px-7 rounded-t-2xl'>Phổ thông</div>

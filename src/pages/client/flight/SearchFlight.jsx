@@ -11,7 +11,7 @@ import { AircraftContext } from '../../../contexts/AircraftProvider';
 import { AirlineContext } from '../../../contexts/AirlineProvider';
 import { SeatTypeContext } from '../../../contexts/SeatTypeProvider';
 import { count } from 'firebase/firestore';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { BookingContext } from '../../../contexts/BookingProvider';
 
 const codeColor = ["bg-[#326575]", "bg-[#D2E2E0]", "bg-[#E0B951] rounded-r-2xl"]
@@ -21,7 +21,9 @@ function SearchFlight(props) {
     const aircrafts = useContext(AircraftContext)
     const airlines = useContext(AirlineContext);
     const seatTypes = useContext(SeatTypeContext);
-    const { booking } = useContext(BookingContext);
+    const { booking, setBooking, handleSave } = useContext(BookingContext);
+    const navigate = useNavigate();
+
     // về coi lại nhé
     const listFlight = useMemo(() => {
         return flights.filter(p =>
@@ -31,15 +33,16 @@ function SearchFlight(props) {
             p.departure_time == booking.startDate
         )
     }, [booking, flights, airports]);
-    console.log(booking);
-    console.log(flights);
-
-
-
     //đếm số lượng ghế 
     const countChair = (id_aircraft, seat_id) => {
         const aircraft = getObjectById(aircrafts, id_aircraft);
         return aircraft.listChair.reduce((sum, item) => item.id_seatype == seat_id ? sum + 1 : sum, 0);
+    }
+    //id máy bay với lại loại ghế 29/10 về coi lại
+    const handleFlights = (flight_id, seatype_id) => {
+        setBooking({ ...booking, flight_id: flight_id, seatype_id: seatype_id });
+        handleSave({ ...booking, flight_id: flight_id, seatype_id: seatype_id });
+        navigate("/customer");
     }
 
     const [openTrip, setOpenTrip] = React.useState(false);
@@ -56,7 +59,6 @@ function SearchFlight(props) {
             <div className='mx-10 my-15'>
                 {
                     listFlight.map((p, index) => {
-                        console.log(p);
                         return (
                             <div className='grid grid-cols-2 '>
                                 <div className="col-span-1 grid grid-cols-2 p-4 my-5 rounded-l-xl shadow-[0px_3px_8px_rgba(0,0,0,0.24)]">
@@ -88,8 +90,7 @@ function SearchFlight(props) {
                                 </div>
                                 <div className='grid grid-cols-3  '>
                                     {seatTypes.map((item, index) => (
-                                        <Link to={"/customer"} key={index} className={`my-5 px-3  bg-[#1b748c] text-white py-8 flex flex-col text-center ${codeColor[index]}`}>
-
+                                        <div onClick={() => handleFlights(p.id, item.id)} key={index} className={`my-5 px-3  bg-[#1b748c] text-white py-8 flex flex-col text-center ${codeColor[index]}`}>
                                             <p className='text-xl font-semibold'>{item.name}</p>
                                             <p>Number {countChair(p.aircraft_id, item.id)}</p>
                                             <div className='flex flex-col'>
@@ -97,7 +98,7 @@ function SearchFlight(props) {
                                                 <h2>VND</h2>
                                             </div>
                                             <FaChevronDown className='m-auto mt-7' />
-                                        </Link>
+                                        </div>
                                     ))}
 
                                 </div>

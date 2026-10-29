@@ -11,10 +11,12 @@ import { getObjectById } from '../../../services/repository';
 import { RiDiscountPercentLine } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
 import { BookingContext } from '../../../contexts/BookingProvider';
+import { perSon } from '../../../types/Types';
 
 function Search(props) {
     const { booking, setBooking } = useContext(BookingContext);
     const [showPassenger, setShowPassenger] = useState(false); // hiện hành khách
+    console.log(booking);
     
     const handleChange = () => {
         setBooking({
@@ -27,18 +29,27 @@ function Search(props) {
     //cộng số lượng hành khách
     const handlePlus = (id) => {
         setBooking(pre => {
-            return { ...pre, passengerList: pre.passengerList.map((p) => p.id == id ? { ...p, quantity: p.quantity + 1 } : p) }
+            return { ...pre, passengerList: pre.passengerList.map((p) => p.id == id ? { ...p, listPerson: [...p.listPerson, perSon] } : p) }
         })
     }
     //trừ số lượng hành khách
     const handleSubtract = (id) => {
         setBooking(pre => {
-            return { ...pre, passengerList: pre.passengerList.map((p) => p.id == id ? { ...p, quantity: Math.max(0, p.quantity - 1) } : p) }
+            return {
+                ...pre,
+                passengerList: pre.passengerList.map((p) => {
+                    if (p.id == id) {
+                        // Dùng Math.max để đảm bảo quantity nhỏ nhất là 0 (hoặc thay số 0 bằng 1 nếu bắt buộc phải có ít nhất 1 hành khách)
+                        return { ...p, listPerson: p.listPerson.filter((_, index) => index !== 0) };
+                    }
+                    return p;
+                })
+            }
         })
     }
     //cộng tất cả số lượng hành khách lại
     const total = useMemo(() => {
-        return booking.passengerList.reduce((sum, item) => sum + item.quantity, 0)
+        return booking?.passengerList?.reduce((sum, item) => sum + item.listPerson.length, 0)
     }, [booking]);
     return (
         <div className='absolute z-50 bg-white bottom-4 w-[80vw] left-1/2 -translate-x-1/2 rounded-xl '>
@@ -50,8 +61,8 @@ function Search(props) {
                 <p>Tra cứu lịch bay</p>
             </div>
             <div className='flex gap-4 pl-10 py-2 mt-3'>
-                <button onClick={() => setBooking({ ...booking, is_round_trip: true })} className={`px-4 py-2  shadow-2xl rounded-full ${booking.is_round_trip ? "bg-amber-300" : ""}`}>Khứ hồi</button>
-                <button onClick={() => setBooking({ ...booking, is_round_trip: false })} className={`px-4 py-2  shadow-2xl rounded-full ${booking.is_round_trip ? "" : "bg-amber-300"}`}>Một chiều</button>
+                <button onClick={() => setBooking({ ...booking, is_round_trip: true })} className={`px-4 py-2  shadow-2xl rounded-full ${booking?.is_round_trip ? "bg-amber-300" : ""}`}>Khứ hồi</button>
+                <button onClick={() => setBooking({ ...booking, is_round_trip: false })} className={`px-4 py-2  shadow-2xl rounded-full ${booking?.is_round_trip ? "" : "bg-amber-300"}`}>Một chiều</button>
             </div>
             <div className='flex justify-between items-center gap-1 mx-10 my-3 '>
                 {/* Đi */}
@@ -61,7 +72,7 @@ function Search(props) {
                         <p>Từ</p>
                     </div>
                     <div className='flex items-center gap-2 mt-2'>
-                        <button className='text-5xl'>{getObjectById(cities, booking.from)?.code}</button>
+                        <button className='text-5xl'>{getObjectById(cities, booking?.from)?.code}</button>
                         <Autocomplete
                             disablePortal
                             options={cities}
@@ -97,7 +108,7 @@ function Search(props) {
                         <p>Đến</p>
                     </div>
                     <div className='flex items-center gap-2 mt-2'>
-                        <button className='text-5xl'>{getObjectById(cities, booking.to)?.code}</button>
+                        <button className='text-5xl'>{getObjectById(cities, booking?.to)?.code}</button>
                         <Autocomplete
                             disablePortal
                             options={cities}
@@ -133,13 +144,14 @@ function Search(props) {
                             </div>
                             <TextField onChange={handleClickInputSearch} name='startDate' type='date' variant="outlined" />
                         </div>
-                        {booking.is_round_trip ? (<div>
-                            <div className="flex items-center gap-2 mb-3">
-                                <MdOutlineCalendarMonth />
-                                <p>Ngày về</p>
-                            </div>
-                            <TextField onChange={handleClickInputSearch} name='endDate' type='date' variant="outlined" />
-                        </div>) : "Không có"}
+                        {
+                            booking?.is_round_trip ? (<div>
+                                <div className="flex items-center gap-2 mb-3">
+                                    <MdOutlineCalendarMonth />
+                                    <p>Ngày về</p>
+                                </div>
+                                <TextField onChange={handleClickInputSearch} name='endDate' type='date' variant="outlined" />
+                            </div>) : "Không có"}
 
                     </div>
                     <hr className='w-xl mt-4 text-gray-400' />
@@ -156,11 +168,11 @@ function Search(props) {
                             <p className='p-3'>Hành khách</p>
                             <hr className='text-gray-400' />
                             {
-                                booking.passengerList.map((p, i) => (
+                                booking.passengerList?.map((p, i) => (
                                     <div className='flex justify-between px-6 py-3'>
                                         <button onClick={() => handleSubtract(p.id)} className='bg-gray-200 px-4 rounded-full'><GrSubtract /></button>
                                         <div className='flex flex-col items-center'>
-                                            <p className='font-bold'>{p.quantity} {p.title}</p>
+                                            <p className='font-bold'>{p.listPerson.length} {p.title}</p>
                                             <p className='text-gray-400'>{p.condition}</p>
                                         </div>
                                         <button onClick={() => handlePlus(p.id)} className='px-4 text-5xl text-blue-300 '><TbCircleDashedPlus /></button>

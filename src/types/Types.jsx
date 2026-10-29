@@ -67,24 +67,37 @@ export const searchType = {
     to: "",
     startDate: "",
     endDate: "",
+    fullname: "",
+    phone: "",
+    email: "",
+    flight_id:"",
+    seatype_id:"",
     passengerList: [
         {
             id: 1,
             title: "Người lớn",
             condition: "Từ 16 tuổi trở lên",
-            "quantity": 0
+            listPerson: []
         },
         {
             id: 2,
             title: "Trẻ em",
             condition: "Từ 12 tuổi trở xuống",
-            "quantity": 0
+            listPerson: []
         },
         {
             id: 3,
             title: "Em bé",
             condition: "Từ 6 tuổi trở xuống",
-            "quantity": 0
+            listPerson: []
         }
     ]
+}
+
+export const perSon = {
+    country_id: "",
+    firstName: "",
+    lastName: "",
+    gender: "",
+    birthDay: ""
 }
