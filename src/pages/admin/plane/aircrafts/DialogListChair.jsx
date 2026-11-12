@@ -16,7 +16,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function DialogListChair({ handleCloseList, openList, openView }) {
     const seatTypes = React.useContext(SeatTypeContext);
     const handleShow = (index) => {
-        const check = openView.listchair.find(p => p.index == index);
+        const check = openView.listChair.find(p => p.index == index);
         return check ? <img className='h-12 rounded-xl p-1 sd' src={getObjectById(seatTypes, check.id_seatype).imgUrl} alt="" /> : <PiArmchairLight className='text-5xl opacity-0 text-gray-400 rounded-xl p-1 sd' />
     }
     return (
@@ -34,11 +34,12 @@ export default function DialogListChair({ handleCloseList, openList, openView })
                 <DialogContent>
                     <div className='flex mt-3'>
                         <div className='grid gap-4' style={{ gridTemplateColumns: `repeat(${openView?.columns}, minmax(0,1fr))` }} >
-                            {Array.from({ length: openView?.rows * openView?.columns }).map((_, index) => {
-                                <div className="col-span-1" key={index}>
-                                    {handleShow(index)}
-                                </div>
-                            })}
+                            {
+                                Array.from({ length: openView?.rows * openView?.columns }).map((_, index) => {
+                                    <div className="col-span-1" key={index}>
+                                        {handleShow(index)}
+                                    </div>
+                                })}
                         </div>
                     </div>
                 </DialogContent>

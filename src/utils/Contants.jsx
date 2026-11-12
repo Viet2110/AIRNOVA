@@ -66,9 +66,9 @@ export const LISTHOME = [
         path: "/"
     },
     {
-       title: "Mua vé",
+       title: "Lịch sử đặt vé",
        icon: <LuTicket />,
-       path: "/categories"
+       path: "/historypay"
     },
     {
         title: "Dịch vụ bổ trợ",
@@ -97,4 +97,9 @@ export const ROLES = {
   ADMIN: 'admin',        // Quản trị viên cấp cao
   MODERATOR: 'moderator', // Quản trị viên cấp trung (người kiểm duyệt)
   USER: 'user',          // Người dùng thông thường
+};
+export const initialOptions = {
+  "client-id": "AaPLCDQotziuH7hWXuWqQOiUhADeXWXSpTXy1bnw7kMvw_xIXcPGAuFSCDSO1SHSbSK9HomOV3UgBTOj",
+  currency: "USD",
+  intent: "capture"
 };

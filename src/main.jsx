@@ -13,31 +13,38 @@ import FlightProvider from './contexts/FlightProvider.jsx'
 import AccountProvider from './contexts/AccountProvider.jsx'
 import AuthProvider from './contexts/AuthProvider.jsx'
 import BookingProvider from './contexts/BookingProvider.jsx'
+import PayProvider from './contexts/PayProvider.jsx'
+import HistoryPayProvider from './contexts/HistoryPayProvider.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <BookingProvider>
-        <AuthProvider>
-          <AccountProvider>
-            <FlightProvider>
-              <SeatTypeProvider>
-                <Service_AirlineProvider>
-                  <Service_DetailProvider>
-                    <AircraftProvider>
-                      <AirportProvider>
-                        <AirlineProvider>
-                          <App />
-                        </AirlineProvider>
-                      </AirportProvider>
-                    </AircraftProvider>
-                  </Service_DetailProvider>
-                </Service_AirlineProvider>
-              </SeatTypeProvider>
-            </FlightProvider>
-          </AccountProvider>
-        </AuthProvider>
-      </BookingProvider>
+      <HistoryPayProvider>
+
+        <PayProvider>
+          <BookingProvider>
+            <AuthProvider>
+              <AccountProvider>
+                <FlightProvider>
+                  <SeatTypeProvider>
+                    <Service_AirlineProvider>
+                      <Service_DetailProvider>
+                        <AircraftProvider>
+                          <AirportProvider>
+                            <AirlineProvider>
+                              <App />
+                            </AirlineProvider>
+                          </AirportProvider>
+                        </AircraftProvider>
+                      </Service_DetailProvider>
+                    </Service_AirlineProvider>
+                  </SeatTypeProvider>
+                </FlightProvider>
+              </AccountProvider>
+            </AuthProvider>
+          </BookingProvider>
+        </PayProvider>
+      </HistoryPayProvider>
     </BrowserRouter>
   </StrictMode>,
 )

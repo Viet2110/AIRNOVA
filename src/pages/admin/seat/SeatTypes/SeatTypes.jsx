@@ -49,9 +49,9 @@ function SeatTypes(props) {
             return;
         }
         if (seatType.id) {
-            await updateDocument("SeatTypes", seatType);
+            await updateDocument("SeatTypes", { ...seatType, price: Number(seatType.price) });
         } else {
-            await addDocument("SeatTypes", seatType);
+            await addDocument("SeatTypes", { ...seatType, price: Number(seatType.price) });
         }
         handleClose();
     }

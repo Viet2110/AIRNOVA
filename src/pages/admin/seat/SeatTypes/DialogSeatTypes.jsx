@@ -25,7 +25,7 @@ export default function DialogSeatTypes({ error, open, handleClose, handleClickI
                 <DialogTitle>{seatType.id ? "Edit SeatTypes" : "Add SeatTypes"}</DialogTitle>
                 <DialogContent>
                     <TextField helperText={error.name} error={!!error.name} value={seatType.name} onChange={handleClickInput} name='name' fullWidth sx={textFieldStyle} id="outlined-basic" label="Name" variant="outlined" />
-                    <TextField helperText={error.price} error={!!error.price} value={seatType.price} onChange={handleClickInput} name='price' fullWidth sx={textFieldStyle} id="outlined-basic" label="Price" variant="outlined" />
+                    <TextField helperText={error.price} error={!!error.price} value={seatType.price} onChange={handleClickInput} type='number' name='price' fullWidth sx={textFieldStyle} id="outlined-basic" label="Price" variant="outlined" />
                     <ImgMediaCard imgUrl={seatType.imgUrl} handleImge={handleImge} />
                 </DialogContent>
                 <DialogFooter handleClose={handleClose} add={addSeatType} title={seatType.id ? "Update" : "Add"} />

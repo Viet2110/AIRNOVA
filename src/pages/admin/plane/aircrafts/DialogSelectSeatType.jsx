@@ -14,7 +14,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function DialogSelectSeatType({ openChoose, handleCloseChoose, handleChair, index, aircraft }) {
     const seatType = React.useContext(SeatTypeContext);
-    
+
     const handleChoose = (id) => {
         handleChair(index, id);
         handleCloseChoose();
@@ -53,7 +53,8 @@ export default function DialogSelectSeatType({ openChoose, handleCloseChoose, ha
                                 </div>
                             ))
                         }
-                    </div>        </DialogContent>
+                    </div>
+                </DialogContent>
                 <DialogActions>
                     <Button variant='contained' color='warning' onClick={handleCloseChoose} autoFocus>
                         Cancel

@@ -70,8 +70,9 @@ export const searchType = {
     fullname: "",
     phone: "",
     email: "",
-    flight_id:"",
-    seatype_id:"",
+    flight_id: "",
+    seatype_id: "",
+    listChair: [],
     passengerList: [
         {
             id: 1,

@@ -17,6 +17,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export default function DialogAirport({ error, open, handleClose, handleClickInput, airport, addAirport }) {
+    console.log("Country ID:", airport.country_id);
+    console.log("Cities:", cities.filter(p => p.country_id == airport.country_id));
     return (
         <React.Fragment>
             <Dialog
@@ -31,13 +33,13 @@ export default function DialogAirport({ error, open, handleClose, handleClickInp
                 role="alertdialog"
                 sx={dialogStyle}
             >
-                <DialogTitle>{airport.id ? "Edit Airport" :"Add Airport" }</DialogTitle>
-                <DialogContent > 
+                <DialogTitle>{airport.id ? "Edit Airport" : "Add Airport"}</DialogTitle>
+                <DialogContent >
                     <TextField value={airport.name} helperText={error.name} error={!!error.name} name='name' onChange={handleClickInput} fullWidth sx={textFieldStyle} id="outlined-basic" label="Name" variant="outlined" />
                     <AutocompleteCard values={airport.country_id} error={error} data={countries} name="country_id" handleClickInput={handleClickInput} title={"Countries"} />
                     <AutocompleteCard values={airport.city_id} error={error} data={cities.filter(p => p.country_id == airport.country_id)} name="city_id" handleClickInput={handleClickInput} title={"Cities"} />
                 </DialogContent>
-                <DialogFooter handleClose={handleClose} add={addAirport} title={airport.id ? "Update" :"Add"} />
+                <DialogFooter handleClose={handleClose} add={addAirport} title={airport.id ? "Update" : "Add"} />
             </Dialog>
         </React.Fragment>
     );

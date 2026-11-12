@@ -10,6 +10,8 @@ import {
     RadioGroup,
     TextField,
     MenuItem,
+    FormControl,
+    FormHelperText,
 } from '@mui/material';
 import { HiOutlineQuestionMarkCircle, HiOutlineUserAdd } from 'react-icons/hi';
 import { FaChevronDown, FaChevronRight, FaChevronUp, FaPassport } from 'react-icons/fa';
@@ -19,17 +21,25 @@ import { MdOutlineLuggage } from 'react-icons/md';
 import { IoBagHandleOutline } from 'react-icons/io5';
 import { BookingContext } from '../../../contexts/BookingProvider';
 import { getObjectById } from '../../../services/repository';
-import { cities } from '../../../utils/data';
+import { cities, countries } from '../../../utils/data';
 import { FlightContext } from '../../../contexts/FlightProvider';
 import { AirlineContext } from '../../../contexts/AirlineProvider';
 import { SeatTypeContext } from '../../../contexts/SeatTypeProvider';
+import { Link, useNavigate } from 'react-router-dom';
+import { searchType } from '../../../types/Types';
 
 export default function Customer() {
     const id = React.useId();
+    const navigate = useNavigate();
     const { booking, setBooking } = React.useContext(BookingContext);
+    const [error, setError] = React.useState(searchType);
     const flights = React.useContext(FlightContext);
     const airlines = React.useContext(AirlineContext);
     const seatTypes = React.useContext(SeatTypeContext);
+
+    React.useEffect(() => {
+        setError({ ...error, passengerList: booking.passengerList })
+    }, [booking]);
     // về nhà đọc lại
     const handleChangeInput = (e, id, index) => {
         setBooking(pre => {
@@ -44,18 +54,47 @@ export default function Customer() {
             }
         })
     }
-    console.log(booking);
+    const validation = () => {
+        const newError = {
+            fullname: booking.fullname ? "" : "Vui lòng nhập họ tên",
+            phone: booking.phone ? "" : "Vui lòng nhập số điện thoại",
+            email: booking.email ? "" : "Vui lòng nhập email",
+
+            passengerList: booking.passengerList.map(p => ({
+                id: p.id,
+                listPerson: p.listPerson.map(c => ({
+                    country_id: c.country_id ? "" : "Vui lòng chọn quốc tịch",
+                    firstName: c.firstName ? "" : "Vui lòng nhập họ",
+                    lastName: c.lastName ? "" : "Vui lòng nhập tên",
+                    gender: c.gender ? "" : "Vui lòng chọn giới tính",
+                    birthDay: c.birthDay ? "" : "Vui lòng chọn ngày sinh"
+                }))
+            }))
+        };
+        setError(newError);
+        // Kiểm tra thông tin liên hệ
+        const checkCustomer = !newError.fullname && !newError.phone && !newError.email;
+        // Kiểm tra thông tin hành khách
+        const checkPassenger = newError.passengerList.every(p =>
+            p.listPerson.every(c =>
+                Object.values(c).every(value => value === "")
+            )
+        );
+        return !(checkCustomer && checkPassenger);
+    }
+    const checkError = () => {
+        if (validation()) {
+            return;
+        }
+        navigate("/selectchair")
+    }
     const handleChangeCustomer = (e) => {
         setBooking({ ...booking, [e.target.name]: e.target.value });
     }
     // hàm tính giá tiền giá 
     const TotalPrice = React.useMemo(() => {
         const chair = getObjectById(seatTypes, booking?.seatype_id);
-        console.log(chair?.price);
-
         const quantity = booking?.passengerList.reduce((sum, item) => item.id != 3 ? sum + item.listPerson.length : sum, 0);
-        console.log(quantity);
-
         return parseInt(chair?.price) * quantity;
     }, [booking, seatTypes]);
     return (
@@ -119,6 +158,9 @@ export default function Customer() {
                                                 label='Quốc tịch'
                                                 defaultValue=''
                                                 className='w-full sm:w-1/2'
+                                                name='country_id'
+                                                error={!!error?.passengerList?.[index]?.listPerson?.[i]?.country_id}
+                                                helperText={error?.passengerList?.[index]?.listPerson?.[i]?.country_id}
                                                 sx={{
                                                     '& .MuiOutlinedInput-root': {
                                                         borderRadius: '10px',
@@ -138,13 +180,12 @@ export default function Customer() {
                                                     },
                                                 }}
                                             >
-                                                <MenuItem value='VN'>Việt Nam</MenuItem>
-                                                <MenuItem value='US'>Hoa Kỳ</MenuItem>
-                                                <MenuItem value='JP'>Nhật Bản</MenuItem>
-                                                <MenuItem value='KR'>Hàn Quốc</MenuItem>
-                                                <MenuItem value='SG'>Singapore</MenuItem>
-                                                <MenuItem value='TH'>Thái Lan</MenuItem>
-                                                <MenuItem value='GB'>Vương quốc Anh</MenuItem>
+                                                {
+                                                    countries.map((u => (
+                                                        <MenuItem value={u.id}>{u.name}</MenuItem>
+                                                    )))
+
+                                                }
                                             </TextField>
                                         </div>
                                         {/* Họ và tên */}
@@ -168,6 +209,8 @@ export default function Customer() {
                                                     },
                                                 }}
                                                 name='firstName' onChange={(e) => handleChangeInput(e, p.id, i)}
+                                                error={!!error?.passengerList[index].listPerson[i]?.firstName}
+                                                helperText={error?.passengerList[index].listPerson[i]?.firstName}
                                             />
                                             <TextField
                                                 variant='outlined'
@@ -188,32 +231,40 @@ export default function Customer() {
                                                     },
                                                 }}
                                                 name='lastName' onChange={(e) => handleChangeInput(e, p.id, i)}
+                                                error={!!error?.passengerList[index].listPerson[i]?.lastName}
+                                                helperText={error?.passengerList[index].listPerson[i]?.lastName}
                                             />
                                         </div>
                                         {/* Giới tính và ngày sinh */}
                                         <div className='grid grid-cols-1 sm:grid-cols-2 gap-5 mb-6'>
-                                            <div className='border border-gray-300 rounded-[10px] px-3 flex items-center'>
-                                                <RadioGroup
-                                                    row
-                                                    aria-labelledby={`${id}-gender`}
-                                                    name='gender'
-                                                    sx={{ justifyContent: 'space-around', width: '100%' }}
+                                            <FormControl fullWidth error={!!error?.passengerList?.[index]?.listPerson?.[i]?.gender}>
+                                                <div className={`border border-gray-300 rounded-[10px] px-3 flex items-center ${
+                                                    error?.passengerList?.[index]?.listPerson?.[i]?.gender ? "border-red-500" : "border-gray-300"
+                                                }`}>
+                                                    <RadioGroup
+                                                        row
+                                                        name='gender'
+                                                        value={c.gender || ""}
+                                                        onChange={(e) => handleChangeInput(e, p.id, i)}
+                                                        sx={{ justifyContent: 'space-around', width: '100%' }}
+                                                    >
+                                                        <FormControlLabel
+                                                            value='male'
+                                                            control={<Radio />}
+                                                            label='Nam'
+                                                        />
 
-                                                >
-                                                    <FormControlLabel
-                                                        value='male'
-                                                        control={<Radio />}
-                                                        label='Nam'
-                                                        name='gender' onChange={(e) => handleChangeInput(e, p.id, i)}
-                                                    />
-                                                    <FormControlLabel
-                                                        value='female'
-                                                        control={<Radio />}
-                                                        label='Nữ'
-                                                        name='gender' onChange={(e) => handleChangeInput(e, p.id, i)}
-                                                    />
-                                                </RadioGroup>
-                                            </div>
+                                                        <FormControlLabel
+                                                            value='female'
+                                                            control={<Radio />}
+                                                            label='Nữ'
+                                                        />
+                                                    </RadioGroup>
+                                                </div>
+                                                <FormHelperText>
+                                                    {error?.passengerList?.[index]?.listPerson?.[i]?.gender}
+                                                </FormHelperText>
+                                            </FormControl>
                                             <TextField
                                                 type='date'
                                                 variant='outlined'
@@ -237,6 +288,8 @@ export default function Customer() {
                                                     },
                                                 }}
                                                 name='birthDay' onChange={(e) => handleChangeInput(e, p.id, i)}
+                                                error={!!error?.passengerList[index].listPerson[i]?.birthDay}
+                                                helperText={error?.passengerList[index].listPerson[i]?.birthDay}
                                             />
                                         </div>
                                         {/* Thông tin hộ chiếu */}
@@ -372,7 +425,8 @@ export default function Customer() {
                                 variant='outlined'
                                 size='small'
                                 fullWidth
-                                name='fullname' onChange={handleChangeCustomer}
+                                error={!!error.fullname}
+                                helperText={error.fullname}
                                 sx={{
                                     '& .MuiOutlinedInput-root': {
                                         borderRadius: '10px',
@@ -391,7 +445,7 @@ export default function Customer() {
                                         color: '#326575',
                                     },
                                 }}
-
+                                name='fullname' onChange={handleChangeCustomer}
                             />
 
                             <TextField
@@ -399,7 +453,8 @@ export default function Customer() {
                                 variant='outlined'
                                 size='small'
                                 fullWidth
-                                name='fullname' onChange={handleChangeCustomer}
+                                error={!!error.phone}
+                                helperText={error.phone}
                                 sx={{
                                     '& .MuiOutlinedInput-root': {
                                         borderRadius: '10px',
@@ -418,7 +473,7 @@ export default function Customer() {
                                         color: '#326575',
                                     },
                                 }}
-
+                                name='phone' onChange={handleChangeCustomer}
                             />
 
                             <TextField
@@ -427,6 +482,8 @@ export default function Customer() {
                                 variant='outlined'
                                 size='small'
                                 fullWidth
+                                error={!!error.email}
+                                helperText={error.email}
                                 sx={{
                                     '& .MuiOutlinedInput-root': {
                                         borderRadius: '10px',
@@ -620,7 +677,7 @@ export default function Customer() {
                         <span className='font-medium'>Giá bạn trả</span>
                         <div className='flex items-center gap-1'>
                             <span className='text-orange-600 font-semibold text-base'>
-                                {TotalPrice.toLocaleString('vi-VN')}VND
+                                {TotalPrice.toLocaleString('vi-VN')} VND
                             </span>
                             <span className='text-gray-500'>⌄</span>
                         </div>
@@ -631,9 +688,9 @@ export default function Customer() {
                         Kiếm 5.171.101 Sao Priority
                     </div>
 
-                    <button className='w-full mt-4 mb-1 bg-[#ed6531] hover:bg-[#d95324] text-white font-semibold rounded-full py-3.5 transition-colors'>
+                    <div onClick={checkError} className='block w-full mt-4 mb-1 bg-[#ed6531] hover:bg-[#d95324] text-white font-semibold rounded-full py-3.5 text-center transition-colors'>
                         Tiếp tục
-                    </button>
+                    </div>
                 </div>
             </div>
 

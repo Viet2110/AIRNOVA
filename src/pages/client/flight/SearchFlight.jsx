@@ -44,7 +44,7 @@ function SearchFlight(props) {
         handleSave({ ...booking, flight_id: flight_id, seatype_id: seatype_id });
         navigate("/customer");
     }
-
+    
     const [openTrip, setOpenTrip] = React.useState(false);
 
     const handleClickOpenTrip = () => {

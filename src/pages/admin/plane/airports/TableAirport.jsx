@@ -75,7 +75,7 @@ export default function TableAirport({ handleEdit, search }) {
                             </StyledTableCell>
                             <StyledTableCell align="center">{row.name}</StyledTableCell>
                             <StyledTableCell align="center">{countries.find(p => p.id == row.country_id).name}</StyledTableCell>
-                            <StyledTableCell align="center">{cities.find(t => t.id == row.city_id).name}</StyledTableCell>
+                            <StyledTableCell align="center">{cities.find(t => t.id == row.city_id)?.name}</StyledTableCell>
                             <StyledTableCell align="center">{formatFirebaseTimestamp(row.created_at)}</StyledTableCell>
                             <StyledTableCell align="center">
                                 <Button onClick={() => handleEdit(row)} variant="contained" sx={{ mr: 2 }}>
