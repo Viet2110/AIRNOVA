@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "./noel.css";
+import "./Noel.css";
 import img1 from "../../../assets/cookies.png";
 import img2 from "../../../assets/bell.png";
 import img3 from "../../../assets/gift.png";

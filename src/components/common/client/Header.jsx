@@ -1,5 +1,4 @@
 import React from 'react';
-import Flower from '../../../assets/Flower.jpg';
 import { FiSearch } from 'react-icons/fi';
 import { MdOutlineShoppingCart } from 'react-icons/md';
 function Header(props) {
